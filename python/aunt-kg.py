@@ -98,6 +98,7 @@ def preprocessing(server, datasets=DATASETS):
                     (
                         "(simple (parent $pid $cid0))",
                         "(simple (parent $pid $cid1))",
+                        "(simple (isIdDifferent $cid0 $cid1))",
                         "(simple (female $cid0))",
                     ),
                     ("(simple (sister $cid0 $cid1))",),
