@@ -28,7 +28,7 @@ def preprocessing(server, datasets=DATASETS):
                         "(src (Individuals $i (Fullname $name)))",
                     ),
                     ("(simple (hasName $id $name))", "(simple (hasId $name $id))"),
-                )
+                ).block()
 
                 scope.transform(
                     (
@@ -36,14 +36,14 @@ def preprocessing(server, datasets=DATASETS):
                         '(src (Individuals $i (Sex "M")))',
                     ),
                     ("(simple (male $id))",),
-                )
+                ).block()
                 scope.transform(
                     (
                         "(src (Individuals $i (Id $id)))",
                         '(src (Individuals $i (Sex "F")))',
                     ),
                     ("(simple (female $id))",),
-                )
+                ).block()
 
                 scope.transform(
                     (
@@ -58,7 +58,7 @@ def preprocessing(server, datasets=DATASETS):
                         "(src (Relations $r (Children $lci $cid)))",
                     ),
                     ("(simple (parent $id $cid))",),
-                )
+                ).block()
                 scope.transform(
                     (
                         "(src (Relations $r (Husband $id)))",
@@ -72,7 +72,7 @@ def preprocessing(server, datasets=DATASETS):
                         "(src (Relations $r (Children $cid)))",
                     ),
                     ("(simple (parent $id $cid))",),
-                )
+                ).block()
 
                 # Add mother relations
                 scope.transform(
@@ -83,6 +83,16 @@ def preprocessing(server, datasets=DATASETS):
                     ("(simple (mother $pid $cid))",),
                 ).block()
 
+                # Add byName mother relations
+                scope.transform(
+                    (
+                        "(simple (mother $pid $cid))",
+                        "(simple (hasName $pid $name0))",
+                        "(simple (hasName $cid $name1))",
+                    ),
+                    ("(simple (motherByName $name0 $name1))",),
+                ).block()
+
                 # Add sister relations
                 scope.transform(
                     (
@@ -91,7 +101,7 @@ def preprocessing(server, datasets=DATASETS):
                         "(simple (female $cid0))",
                     ),
                     ("(simple (sister $cid0 $cid1))",),
-                )
+                ).block()
 
                 ## Add byName sister relations
                 scope.transform(
