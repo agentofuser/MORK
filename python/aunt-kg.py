@@ -2,10 +2,10 @@ from client import MORK, ManagedMORK
 
 
 DATASETS = (
-    # "royal92",
+    "royal92",
     "lordOfTheRings",
-    # "adameve",
-    # "simpsons",
+    "adameve",
+    "simpsons",
 )
 
 
@@ -20,7 +20,7 @@ def preprocessing(server, datasets=DATASETS):
                     downloaded = src.download(
                         "(Individuals $i (Fullname $name))", "$name"
                     )
-                    print("names", dataset, downloaded.data)
+                    # print("names", dataset, downloaded.data)
 
                 # Generate isIdDifferent relations so that sister relations aren't reflective
                 ids_string = scope.download(
@@ -32,10 +32,13 @@ def preprocessing(server, datasets=DATASETS):
                     if line.strip()
                 ]
 
+                entries = []
                 for id0 in ids:
                     for id1 in ids:
                         if id0 != id1:
-                            scope.upload_(f'(simple (isIdDifferent "{id0}" "{id1}"))')
+                            entries += f'(simple (isIdDifferent "{id0}" "{id1}"))'
+                to_upload = "\n".join(entries)
+                scope.upload_(to_upload)
 
                 scope.transform(
                     (
@@ -154,8 +157,8 @@ def preprocessing(server, datasets=DATASETS):
         "file://" + __file__.rpartition("/")[0] + "/simple_all.metta",
     )
 
-    for i, item in enumerate(ins.history):
-        print("preprocessing event", i, str(item))
+    # for i, item in enumerate(ins.history):
+    #     print("preprocessing event", i, str(item))
 
 
 def _main():
