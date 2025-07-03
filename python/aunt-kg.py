@@ -22,6 +22,21 @@ def preprocessing(server, datasets=DATASETS):
                     )
                     print("names", dataset, downloaded.data)
 
+                # Generate isIdDifferent relations so that sister relations aren't reflective
+                ids_string = scope.download(
+                    "(src (Individuals $i (Id $id)))", "$id"
+                ).data
+                ids = [
+                    line.strip()[1:-1]
+                    for line in ids_string.strip().splitlines()
+                    if line.strip()
+                ]
+
+                for id0 in ids:
+                    for id1 in ids:
+                        if id0 != id1:
+                            scope.upload_(f'(simple (isIdDifferent "{id0}" "{id1}"))')
+
                 scope.transform(
                     (
                         "(src (Individuals $i (Id $id)))",
